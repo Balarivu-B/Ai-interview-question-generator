@@ -1,14 +1,28 @@
 {
-  "services": {
-    "frontend": {
-      "entrypoint": "frontend",
-      "framework": "vite",
-      "routePrefix": "/"
+  "builds": [
+    {
+      "src": "backend/app/main.py",
+      "use": "@vercel/python"
     },
-    "backend": {
-      "entrypoint": "backend",
-      "framework": "fastapi",
-      "routePrefix": "/_/backend"
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
     }
-  }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "backend/app/main.py"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "frontend/index.html"
+    }
+  ]
 }
