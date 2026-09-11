@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config.settings import settings
 from app.routes import auth, questions, history, answers
 
-root_path = "/_/backend" if os.getenv("VERCEL") else ""
+root_path = ""
 
 app = FastAPI(
     title=settings.PROJECT_NAME,

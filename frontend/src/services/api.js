@@ -4,7 +4,7 @@ import axios from 'axios';
 const API_BASE_URL = import.meta.env.VITE_API_URL || 
   (window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1')
     ? 'http://localhost:8000/api' 
-    : '/_/backend/api');
+    : '/api');
 
 
 const api = axios.create({
