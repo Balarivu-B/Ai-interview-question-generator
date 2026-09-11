@@ -92,11 +92,8 @@ async def login(payload: UserLogin):
                         "created_at": user.created_at
                     }
                 }
-        except Exception as e:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail=f"Login failed: {str(e)}"
-            )
+        except Exception:
+            pass
             
     # 2. SQLite Fallback Mode
     user = DatabaseService.get_local_user_by_email(email)

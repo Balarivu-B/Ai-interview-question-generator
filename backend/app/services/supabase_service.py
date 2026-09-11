@@ -78,8 +78,7 @@ def init_local_db():
     conn.close()
 
 # Initialize database on startup
-if not supabase_client:
-    init_local_db()
+init_local_db()
 
 class DatabaseService:
     @staticmethod
