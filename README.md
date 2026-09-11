@@ -1,91 +1,153 @@
-# AI Interview Question Generator
+# 🎯 AI Interview Question Generator
 
-This is a premium, AI-powered web application that automatically generates interview questions, model answers, and hints. It is designed to assist candidates, recruiters, and HR professionals.
+> A production-ready, full-stack AI platform that generates customized technical & behavioral interview questions, model answers, hints, and downloadable PDF question packs.
 
-## Technology Stack
+---
 
-- **Frontend**: React (Vite), Tailwind CSS, Axios, React Router, jsPDF.
-- **Backend**: FastAPI, Uvicorn, Pydantic, Python-dotenv, ReportLab.
-- **Database**: Supabase PostgreSQL (with a transparent local SQLite fallback).
-- **Authentication**: Supabase Auth (with a local fallback session provider).
-- **AI Engine**: OpenAI API (with a realistic, structured mock question fallback).
+## 🌟 Overview
 
-## Default Local Login Credentials
+The **AI Interview Question Generator** is an interactive web application built for candidates, recruiters, and hiring managers. It leverages OpenAI's language models (`gpt-3.5-turbo`) to create tailored interview question sets based on specific job roles, skills, experience levels, and difficulty.
 
-When running the application in local fallback mode (default startup without live Supabase API configurations), the local SQLite database is automatically seeded on first launch with the following test credentials:
+The system features a **dual-layer architecture**:
+- **AI & Mock Generation**: Connects to OpenAI when an API key is available, or automatically switches to a structured local mock generator.
+- **Supabase Cloud & SQLite Fallback**: Syncs data to a cloud Supabase PostgreSQL database when configured, or transparently uses a local SQLite database (`local_interview.db`).
 
-- **Username / Email**: `admin@interview.ai`
+---
+
+## ✨ Features
+
+- **🤖 AI Question Generation**: Generates role-specific questions, ideal answers, hints, and difficulty ratings.
+- **⚡ Smart Local Fallbacks**: Works out-of-the-box locally without requiring active API keys or external services.
+- **🔐 JWT Authentication**: Complete signup, login, session persistence, and protected routes.
+- **📄 Professional PDF Export**: One-click generation and download of formatted interview packs via ReportLab / jsPDF.
+- **📊 History & Practice Mode**: Review previously generated interview sets, submit practice answers, and receive evaluation feedback.
+- **🎨 Glassmorphism UI**: High-contrast, dark-themed responsive interface powered by React 19 and Tailwind CSS.
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Component | Technologies |
+| :--- | :--- | :--- |
+| **Frontend** | Single Page App | React 19, Vite, Tailwind CSS, Axios, React Router v6, Lucide Icons, jsPDF |
+| **Backend** | REST API Service | FastAPI, Python 3.12, Uvicorn, Pydantic v2, PyJWT, ReportLab |
+| **Database** | Primary / Fallback | Supabase PostgreSQL (Cloud) / SQLite 3 (Local Runtime) |
+| **AI Engine** | AI Question Service| OpenAI API (`gpt-3.5-turbo`) |
+
+---
+
+## 📁 Repository Structure
+
+```
+AI-Interview-Question-Generator/
+├── backend/
+│   ├── app/
+│   │   ├── config/          # Application settings & environment loader
+│   │   ├── middleware/      # Auth & Security verification middleware
+│   │   ├── routes/          # Auth, Questions, Answers, History API routes
+│   │   ├── schemas/         # Pydantic data validation models
+│   │   ├── services/        # OpenAI, Supabase, PDF Services
+│   │   └── utils/           # Password hashing & helper functions
+│   ├── .env                 # Backend environment variables
+│   ├── main.py              # FastAPI application entrypoint
+│   └── requirements.txt     # Python backend dependencies
+├── frontend/
+│   ├── public/              # Static assets & favicon
+│   ├── src/
+│   │   ├── components/      # UI components (Navbar, Sidebar, QuestionCard, Footer)
+│   │   ├── context/         # AuthContext Provider
+│   │   ├── hooks/           # Custom React hooks (useAuth)
+│   │   ├── pages/           # Dashboard, History, Results, Login, Register
+│   │   ├── services/        # API Client & Supabase SDK integrations
+│   │   ├── utils/           # PDF Export & Validators
+│   │   ├── App.jsx          # Router & Layout wrapper
+│   │   └── main.jsx         # React DOM entrypoint
+│   ├── package.json         # Frontend npm dependencies
+│   ├── tailwind.config.js   # Tailwind CSS configuration
+│   └── vite.config.js       # Vite development configuration
+├── schema.sql               # Supabase PostgreSQL database tables definition
+├── vercel.json              # Vercel deployment configuration
+└── README.md                # Master documentation
+```
+
+---
+
+## 🔑 Default Test Credentials
+
+When running in local SQLite mode (default startup without Supabase credentials), the database is automatically pre-seeded with test admin credentials:
+
+- **Email / Username**: `admin@interview.ai`
 - **Password**: `adminpassword`
 
-*(You can also use the **Create Account** screen to register any other custom credentials locally.)*
+*(You can also click **Create Account** on the login page to register new accounts).*
 
 ---
 
-## Getting Started
+## ⚙️ Environment Configuration
 
-### Prerequisites
+Environment settings are loaded from [backend/.env](file:///c:/Users/balar/OneDrive/ドキュメント/AI-Interview-Question-Generator/backend/.env):
 
-- Node.js (v18+) and npm
-- Python (3.9+)
+```env
+# OpenAI API Configuration
+OPENAI_API_KEY=sk-proj-your-openai-api-key
+OPENAI_MODEL=gpt-3.5-turbo
 
-### Installation
+# Supabase Configuration (Optional - falls back to local SQLite if empty)
+SUPABASE_URL=https://your-project-id.supabase.co
+SUPABASE_KEY=your-supabase-anon-or-service-key
 
-#### 1. Backend Setup
-
-1. Open a terminal in the `backend/` directory:
-   ```bash
-   cd backend
-   ```
-2. Create and activate a virtual environment:
-   ```bash
-   python -m venv venv
-   # On Windows:
-   .\venv\Scripts\activate
-   # On macOS/Linux:
-   source venv/bin/activate
-   ```
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. Copy the `.env` template and add your credentials (optional):
-   - By default, the application runs in **local fallback mode** using a local SQLite database (`local_interview.db`) and realistic mock questions, allowing immediate testing without API keys.
-   - To connect live APIs, configure `OPENAI_API_KEY`, `SUPABASE_URL`, and `SUPABASE_KEY` in `backend/.env`.
-
-#### 2. Frontend Setup
-
-1. Open a terminal in the `frontend/` directory:
-   ```bash
-   cd frontend
-   ```
-2. Install npm packages:
-   ```bash
-   npm install --legacy-peer-deps
-   ```
-
----
-
-## Running the Application
-
-### 1. Run the Backend Server
-
-From the `backend/` directory (with the virtual environment activated):
-```bash
-uvicorn app.main:app --reload --port 8000
+# JWT Auth Secret
+LOCAL_JWT_SECRET=super-secret-local-key
 ```
-The FastAPI documentation will be available at: http://localhost:8000/docs
-
-### 2. Run the Frontend Development Server
-
-From the `frontend/` directory:
-```bash
-npm run dev
-```
-Open your browser and navigate to http://localhost:5173 to start using the app.
 
 ---
 
-## Live API Configurations & Supabase Schema
+## 🏁 Quick Start Guide
 
-If you wish to configure a live database in Supabase, execute the SQL script in `schema.sql` inside the Supabase SQL editor.
-Make sure your environment variables in `backend/.env` point to your live Supabase project.
+### 1. Launch Backend Server
+
+```powershell
+cd backend
+.\venv\Scripts\python.exe -m uvicorn app.main:app --reload --port 8000
+```
+- **Backend API**: `http://localhost:8000`
+- **Interactive Swagger API Docs**: `http://localhost:8000/docs`
+
+### 2. Launch Frontend Application
+
+In a **second terminal window**:
+```powershell
+cd frontend
+npm.cmd run dev
+```
+- **Frontend App**: `http://localhost:5173`
+
+---
+
+## 📡 API Endpoints Overview
+
+| Category | Method | Endpoint | Description |
+| :--- | :--- | :--- | :--- |
+| **Auth** | `POST` | `/api/auth/register` | Register a new user account |
+| **Auth** | `POST` | `/api/auth/login` | Authenticate user & return JWT token |
+| **Auth** | `GET` | `/api/auth/me` | Fetch authenticated user profile |
+| **Questions** | `POST` | `/api/questions/generate` | Generate customized question set |
+| **Questions** | `GET` | `/api/questions/set/{set_id}` | Get specific question set details |
+| **History** | `GET` | `/api/history/` | Fetch user's saved interview sets |
+| **History** | `DELETE` | `/api/history/{set_id}` | Delete an interview set |
+| **Answers** | `POST` | `/api/answers/evaluate` | Grade user answer and provide feedback |
+
+---
+
+## 🗄️ Database Setup (Supabase PostgreSQL)
+
+To use Supabase Cloud as your remote database:
+1. Create a project at [supabase.com](https://supabase.com).
+2. Open the **SQL Editor** in Supabase and run the commands in [schema.sql](file:///c:/Users/balar/OneDrive/ドキュメント/AI-Interview-Question-Generator/schema.sql).
+3. Add your `SUPABASE_URL` and `SUPABASE_KEY` to [backend/.env](file:///c:/Users/balar/OneDrive/ドキュメント/AI-Interview-Question-Generator/backend/.env).
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License.
